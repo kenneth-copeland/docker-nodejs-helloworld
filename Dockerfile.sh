@@ -1,3 +1,4 @@
+cat <<END
 FROM debian:stretch
 ARG DEBIAN_FRONTEND=noninteractive
 
@@ -8,14 +9,15 @@ RUN curl -s https://deb.nodesource.com/gpgkey/nodesource.gpg.key | apt-key add -
  && apt-get install -y nodejs && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # App
-ADD package.json package-lock.json  /web/
+ADD ${PKGS} /web/
 WORKDIR /web
 RUN npm install
 WORKDIR /
-ADD package.json package-lock.json index.js Dockerfile /web/
+ADD ${SRCS} /web/
 WORKDIR /web
 # Install app dependencies
 RUN npm install
 
 EXPOSE  8080
 ENTRYPOINT ["nodejs", "./index.js"]
+END
